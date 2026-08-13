@@ -6,11 +6,13 @@ from app.api.schemas import GenerateImageRequest, GenerateImageResponse
 from app.core.security import validate_prompt_input
 from app.providers.base import LLMProviderError
 from app.providers.image_base import get_image_provider
+from app.providers.pollinations_image import PollinationsImageProvider
 from app.services.prompt_enhancement.image_prompt_packer import (
     is_mythic_epic,
     pack_image_prompt,
     prefer_portrait,
 )
+from app.utils.logging import logger
 
 
 async def generate_image(request: GenerateImageRequest) -> GenerateImageResponse:
@@ -44,7 +46,27 @@ async def generate_image(request: GenerateImageRequest) -> GenerateImageResponse
 
     force = None if provider_name == "auto" else provider_name
     provider = get_image_provider(force)
-    result = await provider.generate(packed, width=width, height=height)
+
+    try:
+        result = await provider.generate(packed, width=width, height=height)
+    except LLMProviderError as exc:
+        # Explicit HF selection: still return an image via Pollinations when HF is down.
+        if provider_name in {"huggingface", "hf"} and exc.status_code in {
+            429,
+            502,
+            503,
+            504,
+        }:
+            logger.info(
+                "Hugging Face image failed (%s); falling back to Pollinations",
+                exc.message,
+            )
+            result = await PollinationsImageProvider().generate(
+                packed, width=width, height=height
+            )
+        else:
+            raise
+
     return GenerateImageResponse(
         image_url=result.image_url,
         provider=result.provider,

@@ -48,7 +48,7 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<GenerateImageResponse | null>(null)
-  const [provider, setProvider] = useState<ImageProviderChoice>('huggingface')
+  const [provider, setProvider] = useState<ImageProviderChoice>('auto')
   const [aspect, setAspect] = useState<ImageAspect>('portrait')
   const [imgLoaded, setImgLoaded] = useState(false)
   const [history, setHistory] = useState<HistoryItem[]>(() => loadHistory())
@@ -122,7 +122,7 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
           <div>
             <h3 className="text-sm font-semibold text-stone-800">Generated image</h3>
             <p className="mt-0.5 text-xs text-stone-500">
-              Gemini (best) · Hugging Face FLUX (free key) · Pollinations (no key, lower quality)
+              Auto tries Gemini → Hugging Face → Pollinations. Pollinations needs no key.
             </p>
           </div>
         </div>
@@ -157,10 +157,10 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
           value={provider}
           onChange={setProvider}
           options={[
+            { value: 'auto', label: 'Auto' },
             { value: 'huggingface', label: 'Hugging Face' },
             { value: 'gemini', label: 'Gemini' },
             { value: 'pollinations', label: 'Pollinations' },
-            { value: 'auto', label: 'Auto' },
           ]}
           disabled={loading}
         />
@@ -179,13 +179,15 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
 
       {provider === 'gemini' && (
         <p className="mb-3 text-xs text-amber-800">
-          Requires <code className="rounded bg-amber-50 px-1">GEMINI_API_KEY</code> on the server
+          Requires <code className="rounded bg-amber-50 px-1">GEMINI_API_KEY</code> on Render
+          Environment, then redeploy
         </p>
       )}
 
       {provider === 'huggingface' && (
         <p className="mb-3 text-xs text-amber-800">
-          Requires <code className="rounded bg-amber-50 px-1">HF_API_TOKEN</code> from{' '}
+          Requires <code className="rounded bg-amber-50 px-1">HF_API_TOKEN</code> on{' '}
+          <strong>Render → Environment</strong> (not only local .env), from{' '}
           <a
             href="https://huggingface.co/settings/tokens"
             target="_blank"
@@ -194,7 +196,7 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
           >
             huggingface.co/settings/tokens
           </a>{' '}
-          (enable Inference)
+          with Inference Providers enabled. If HF fails, the API falls back to Pollinations.
         </p>
       )}
 

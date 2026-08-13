@@ -56,7 +56,8 @@ def test_generate_image_gemini_without_key_503():
     assert "GEMINI_API_KEY" in r.json()["detail"]
 
 
-def test_generate_image_huggingface_without_token_503():
+def test_generate_image_huggingface_without_token_falls_back():
+    """Missing HF token returns Pollinations so Generate still succeeds."""
     os.environ["HF_API_TOKEN"] = ""
     get_settings.cache_clear()
     r = client.post(
@@ -67,8 +68,10 @@ def test_generate_image_huggingface_without_token_503():
             "aspect": "portrait",
         },
     )
-    assert r.status_code == 503
-    assert "HF_API_TOKEN" in r.json()["detail"]
+    assert r.status_code == 200
+    data = r.json()
+    assert data["provider"] == "pollinations"
+    assert "pollinations" in data["image_url"]
 
 
 def test_generate_image_empty_rejected():
