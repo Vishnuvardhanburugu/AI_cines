@@ -1,0 +1,56 @@
+[
+  {
+    "id": "video_futuristic_city",
+    "input": "Make a video of a futuristic city.",
+    "expected_intent": "Create a video depicting a futuristic city",
+    "expected_category": "video",
+    "must_preserve": ["video", "futuristic", "city"],
+    "must_not_invent": ["spiderman", "wedding", "fastapi", "yolo"],
+    "allowed_assumption_types": ["camera", "lighting", "atmosphere", "style"]
+  },
+  {
+    "id": "coding_object_detection_api",
+    "input": "Create a Python API that receives an image and detects objects.",
+    "expected_intent": "Build a Python API for image object detection",
+    "expected_category": "coding",
+    "must_preserve": ["Python", "API", "image", "objects"],
+    "must_not_invent": ["FastAPI", "YOLO", "PostgreSQL", "Docker", "Kubernetes"],
+    "allowed_assumption_types": ["io", "errors", "tests"]
+  },
+  {
+    "id": "email_leave_request",
+    "input": "Write an email asking my manager for leave.",
+    "expected_intent": "Draft a leave request email to a manager",
+    "expected_category": "general",
+    "must_preserve": ["email", "manager", "leave"],
+    "must_not_invent": ["January 15", "sick", "vacation to Hawaii", "March 3"],
+    "allowed_assumption_types": ["tone", "structure", "placeholders"]
+  },
+  {
+    "id": "image_simple",
+    "input": "Draw a dog running.",
+    "expected_intent": "Generate an image of a dog running",
+    "expected_category": "image",
+    "must_preserve": ["dog", "running"],
+    "must_not_invent": ["golden retriever", "Ferrari", "spiderman"],
+    "allowed_assumption_types": ["environment", "lighting", "style"]
+  },
+  {
+    "id": "already_good",
+    "input": "Write a concise professional email to my manager requesting leave from [start date] to [end date], including a brief reason placeholder, an offer to hand off work, and a polite closing.",
+    "expected_intent": "Polish an already-specific leave email prompt",
+    "expected_category": "general",
+    "must_preserve": ["manager", "leave", "start date", "end date"],
+    "must_not_invent": ["January 15", "Hawaii"],
+    "allowed_assumption_types": ["tone"]
+  },
+  {
+    "id": "contradictory_language",
+    "input": "Write a Python function that sorts a list. Do not use Java.",
+    "expected_intent": "Python sort function without Java",
+    "expected_category": "coding",
+    "must_preserve": ["Python", "sort", "list"],
+    "must_not_invent": ["JavaScript", "Rust"],
+    "allowed_assumption_types": ["edge", "tests"]
+  }
+]
