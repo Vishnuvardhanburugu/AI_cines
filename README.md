@@ -123,13 +123,24 @@ Evaluation dataset: `backend/app/evaluation/dataset.json` (includes the three sp
 
 ## Docker
 
+**Local (two services):**
+
 ```bash
 cp .env.example .env
-# set OPENAI_API_KEY or LLM_PROVIDER=mock
+# set GEMINI_API_KEY or LLM_PROVIDER=mock
 docker compose up --build
 ```
 
 Frontend: http://localhost:3000 · Backend: http://localhost:8000
+
+**Single image (Render / PaaS expecting root `Dockerfile`):**
+
+```bash
+docker build -t aicines .
+docker run --rm -p 8000:8000 -e PORT=8000 -e LLM_PROVIDER=mock aicines
+```
+
+Open http://localhost:8000 — SPA + `/api` on one port. On Render, set env vars (`GEMINI_API_KEY`, `LLM_PROVIDER`, etc.) in the dashboard; Dockerfile path can stay `./Dockerfile`.
 
 ## Design principles
 
