@@ -70,7 +70,8 @@ class GeminiImageProvider(ImageProvider):
 
         if response.status_code == 429:
             raise LLMProviderError(
-                "Gemini image rate limit reached. Wait and retry, or temporarily use Pollinations.",
+                "Gemini image rate limit reached. Wait and retry, switch to Hugging Face, "
+                "or use Pollinations.",
                 429,
             )
         if response.status_code >= 400:

@@ -29,7 +29,7 @@ API keys stay on the backend only.
 - **Gemini:** Free developer API via [Google AI Studio](https://aistudio.google.com/apikey) (rate-limited Flash models). Recommended default.
 - **Grok:** Free chat on X/grok.com ≠ free API. xAI API is generally paid/prepaid. Optional via `XAI_API_KEY`.
 - **Mock:** `LLM_PROVIDER=mock` uses an offline cinematic composer (no key). Good for demos.
-- **Images:** After enhance, click **Generate image**. For **Gemini-quality** mythic/epic stills (portrait 9:16), set `GEMINI_API_KEY` and choose Provider **Gemini** in the UI. Without a key, [Pollinations](https://image.pollinations.ai) is used (free, lower quality). **Video generation is not included**.
+- **Images:** After enhance, click **Generate image**. Providers: **Gemini** (`GEMINI_API_KEY`), **Hugging Face FLUX** (`HF_API_TOKEN` from [HF tokens](https://huggingface.co/settings/tokens)), or **Pollinations** (no key, lower quality). Auto tries Gemini → Hugging Face → Pollinations. **Video generation is not included**.
 
 ## Quick start (local)
 

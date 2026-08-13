@@ -48,7 +48,7 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<GenerateImageResponse | null>(null)
-  const [provider, setProvider] = useState<ImageProviderChoice>('gemini')
+  const [provider, setProvider] = useState<ImageProviderChoice>('huggingface')
   const [aspect, setAspect] = useState<ImageAspect>('portrait')
   const [imgLoaded, setImgLoaded] = useState(false)
   const [history, setHistory] = useState<HistoryItem[]>(() => loadHistory())
@@ -122,7 +122,7 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
           <div>
             <h3 className="text-sm font-semibold text-stone-800">Generated image</h3>
             <p className="mt-0.5 text-xs text-stone-500">
-              Prefer Gemini for photoreal epic stills. Pollinations is free but lower quality.
+              Gemini (best) · Hugging Face FLUX (free key) · Pollinations (no key, lower quality)
             </p>
           </div>
         </div>
@@ -157,6 +157,7 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
           value={provider}
           onChange={setProvider}
           options={[
+            { value: 'huggingface', label: 'Hugging Face' },
             { value: 'gemini', label: 'Gemini' },
             { value: 'pollinations', label: 'Pollinations' },
             { value: 'auto', label: 'Auto' },
@@ -178,14 +179,29 @@ export function GeneratedImage({ prompt }: { prompt: string }) {
 
       {provider === 'gemini' && (
         <p className="mb-3 text-xs text-amber-800">
-          Requires <code className="rounded bg-amber-50 px-1">GEMINI_API_KEY</code> in backend/.env
+          Requires <code className="rounded bg-amber-50 px-1">GEMINI_API_KEY</code> on the server
+        </p>
+      )}
+
+      {provider === 'huggingface' && (
+        <p className="mb-3 text-xs text-amber-800">
+          Requires <code className="rounded bg-amber-50 px-1">HF_API_TOKEN</code> from{' '}
+          <a
+            href="https://huggingface.co/settings/tokens"
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            huggingface.co/settings/tokens
+          </a>{' '}
+          (enable Inference)
         </p>
       )}
 
       {showPollinationsWarning && (
         <div className="mb-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
           <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Pollinations is free but lower quality than Gemini. Switch to Gemini for best results.
+          Pollinations is free but lower quality. Prefer Hugging Face or Gemini when available.
         </div>
       )}
 

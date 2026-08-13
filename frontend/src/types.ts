@@ -46,7 +46,7 @@ export interface ApiError {
   detail: string
 }
 
-export type ImageProviderChoice = 'auto' | 'gemini' | 'pollinations'
+export type ImageProviderChoice = 'auto' | 'gemini' | 'huggingface' | 'pollinations'
 export type ImageAspect = 'auto' | 'portrait' | 'landscape'
 
 export interface GenerateImageRequest {

@@ -31,10 +31,12 @@ class Settings(BaseSettings):
     local_base_url: str = "http://localhost:11434/v1"
     local_model: str = "llama3.2"
 
-    # Image generation: auto | pollinations | gemini | mock
+    # Image generation: auto | pollinations | gemini | huggingface | mock
     image_provider: str = "auto"
     pollinations_base_url: str = "https://image.pollinations.ai"
     gemini_image_model: str = "gemini-2.5-flash-image"
+    hf_api_token: str = ""
+    hf_image_model: str = "black-forest-labs/FLUX.1-schnell"
     image_timeout_seconds: float = 90.0
     image_max_prompt_length: int = 1500
 

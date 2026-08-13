@@ -58,6 +58,10 @@ def get_image_provider(force: Optional[str] = None) -> ImageProvider:
         from app.providers.gemini_image import GeminiImageProvider
 
         return GeminiImageProvider()
+    if name in {"huggingface", "hf"}:
+        from app.providers.huggingface_image import HuggingFaceImageProvider
+
+        return HuggingFaceImageProvider()
     if name == "auto":
         from app.providers.auto_image import AutoImageProvider
 

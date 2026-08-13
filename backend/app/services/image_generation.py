@@ -36,9 +36,9 @@ async def generate_image(request: GenerateImageRequest) -> GenerateImageResponse
     packed = pack_image_prompt(prompt, portrait=portrait)
 
     provider_name = (request.provider or "auto").lower()
-    if provider_name not in {"auto", "gemini", "pollinations", "mock"}:
+    if provider_name not in {"auto", "gemini", "huggingface", "hf", "pollinations", "mock"}:
         raise LLMProviderError(
-            "Unsupported image provider. Use auto, gemini, or pollinations.",
+            "Unsupported image provider. Use auto, gemini, huggingface, or pollinations.",
             status_code=400,
         )
 

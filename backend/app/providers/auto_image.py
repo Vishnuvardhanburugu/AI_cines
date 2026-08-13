@@ -1,10 +1,11 @@
-"""Auto image router: Gemini if key present, else Pollinations; fallback on Gemini failure."""
+"""Auto image router: Gemini → Hugging Face → Pollinations."""
 
 from __future__ import annotations
 
 from app.core.config import get_settings
 from app.providers.base import LLMProviderError
 from app.providers.gemini_image import GeminiImageProvider
+from app.providers.huggingface_image import HuggingFaceImageProvider
 from app.providers.image_base import ImageProvider, ImageResult
 from app.providers.pollinations_image import PollinationsImageProvider
 from app.utils.logging import logger
@@ -30,16 +31,17 @@ class AutoImageProvider(ImageProvider):
                     prompt, width=width, height=height
                 )
             except LLMProviderError as exc:
-                logger.info(
-                    "Gemini image failed (%s); falling back to Pollinations",
-                    exc.message,
+                logger.info("Gemini image failed (%s); trying next provider", exc.message)
+
+        if settings.hf_api_token:
+            try:
+                return await HuggingFaceImageProvider().generate(
+                    prompt, width=width, height=height
                 )
-                result = await pollinations.generate(prompt, width=width, height=height)
-                # Keep provider label honest for UI warning
-                return ImageResult(
-                    image_url=result.image_url,
-                    provider="pollinations",
-                    prompt_used=result.prompt_used,
+            except LLMProviderError as exc:
+                logger.info(
+                    "Hugging Face image failed (%s); falling back to Pollinations",
+                    exc.message,
                 )
 
         return await pollinations.generate(prompt, width=width, height=height)

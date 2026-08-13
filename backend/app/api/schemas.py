@@ -37,7 +37,7 @@ class GenerateImageRequest(BaseModel):
     prompt: str = Field(..., min_length=1, max_length=12000)
     width: int = Field(default=1024, ge=256, le=2048)
     height: int = Field(default=576, ge=256, le=2048)
-    # auto | gemini | pollinations | mock
+    # auto | gemini | huggingface | pollinations | mock
     provider: str = Field(default="auto")
     # auto | portrait | landscape
     aspect: str = Field(default="auto")
