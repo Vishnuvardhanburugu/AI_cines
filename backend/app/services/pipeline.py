@@ -74,6 +74,14 @@ class EnhancementPipeline:
                 "Could improve: " + ", ".join(analysis.material_gaps[:5]) + "."
             )
 
+        explanation = enhance.explanation
+        if getattr(self.provider, "used_fallback", False):
+            note = (
+                "Gemini/API quota was hit, so this enhancement used the offline "
+                "composer so you can continue to Generate image."
+            )
+            explanation = f"{explanation} {note}".strip() if explanation else note
+
         return EnhanceResponse(
             original_prompt=prompt,
             enhanced_prompt=enhance.enhanced_prompt,
@@ -83,7 +91,7 @@ class EnhancementPipeline:
             quality_after=enhance.quality_after,
             changes=enhance.changes,
             assumptions=enhance.assumptions,
-            explanation=enhance.explanation,
+            explanation=explanation,
             clarification_questions=enhance.clarification_questions,
             analysis=analysis_text or None,
         )

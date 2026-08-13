@@ -32,10 +32,7 @@ class LLMProvider(ABC):
         ...
 
 
-def get_provider(force: Optional[str] = None) -> LLMProvider:
-    settings = get_settings()
-    provider_name = (force or settings.llm_provider).lower()
-
+def _build_provider(provider_name: str) -> LLMProvider:
     if provider_name == "mock":
         from app.providers.mock import MockProvider
 
@@ -62,3 +59,17 @@ def get_provider(force: Optional[str] = None) -> LLMProvider:
         return LocalProvider()
 
     raise LLMProviderError(f"Unsupported LLM provider: {provider_name}")
+
+
+def get_provider(force: Optional[str] = None) -> LLMProvider:
+    settings = get_settings()
+    provider_name = (force or settings.llm_provider).lower()
+    primary = _build_provider(provider_name)
+
+    # Keep enhance → image flow working when Gemini (etc.) hits free-tier limits.
+    if provider_name != "mock":
+        from app.providers.fallback import FallbackProvider
+
+        return FallbackProvider(primary)
+
+    return primary

@@ -53,7 +53,11 @@ class GeminiProvider(LLMProvider):
             raise LLMProviderError("Could not reach Gemini.", 502) from exc
 
         if response.status_code == 429:
-            raise LLMProviderError("Gemini rate limit reached.", 429)
+            raise LLMProviderError(
+                "Gemini rate limit reached. Wait a minute, or the app will fall back "
+                "to offline enhance so you can still generate an image.",
+                429,
+            )
         if response.status_code >= 400:
             raise LLMProviderError("Gemini request failed.", 502)
 
